@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:bean="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!--告知Spring框架在哪一个包下使用了注解 扫描com.baizhi开头的包中的注解-->
+    <context:component-scan base-package="com.baizhi.*"></context:component-scan>
+    <!--读取jdbc.properties-->
+    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+    <!--配置连接数据库的相关参数 数据源 引入jdcp连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <!--连接数据库的驱动-->
+        <property name="driverClassName" value="${driver}"></property>
+        <!--连接数据库的URL-->
+        <property name="url" value="${url}"></property>
+        <!--连接数据库的用户名-->
+        <property name="username" value="${name}"></property>
+        <!--连接数据库的密码-->
+        <property name="password"  value="${password}"></property>
+    </bean>
+    <!--自动构建sqlsessionFactory对象-->
+    <bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--其别名-->
+        <property name="typeAliasesPackage" >
+            <value>com.baizhi.entity</value>
+        </property>
+        <!--mapper文件的注册-->
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:com/baizhi/dao/*Mapper.xml</value>
+            </list>
+        </property>
+    </bean>
+    <!--自动实现dao实现类-->
+    <bean id="scannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage">
+            <value>com.baizhi.dao</value>
+        </property>
+    </bean>
+
+    <!--引入额外功能类-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--激活@Transactional注解-->
+    <tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
+
+</beans>
