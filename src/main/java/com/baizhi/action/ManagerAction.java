@@ -33,4 +33,5 @@ public class ManagerAction extends ActionSupport {
         }
 
     }
+	//在notepad++上做了一次修改
 }
