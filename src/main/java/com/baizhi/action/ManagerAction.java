@@ -6,7 +6,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-
+//在githut上做了一次修改
 @Controller //自动创建Action对象
 @Scope(value = "prototype") //每次创建新的Action对象
 public class ManagerAction extends ActionSupport {
